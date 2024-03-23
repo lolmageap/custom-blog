@@ -1,4 +1,4 @@
-package code;
+package checkedexception;
 
 import java.io.*;
 
