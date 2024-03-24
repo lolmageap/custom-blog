@@ -6,6 +6,9 @@ kotlin에서는 함수를 일급 객체로 다루기 때문에 함수를 인자�
 
 ```kotlin
 fun main() {
+    val function: KFunction = ::sum
+    
+    calculate(10, 20, function)
     calculate(10, 20, ::sum)
     calculate(10, 20) { a, b ->
         a * b
@@ -24,10 +27,8 @@ fun sum(a: Int, b: Int): Int {
 
 multiply 함수는 두 개의 정수를 받아서 두 정수를 곱한 값을 반환하는 함수를 반환합니다.  
 function 변수는 타입이 (Int) -> Int 입니다.  
-result 변수는 invoke 메서드로 함수를 실행할 수 있습니다.  
-실행 할 때 인자로 2를 넣어주면 2 * 10 * 20 = 400 이 출력됩니다.  
-아래 코드에서 invoke 메서드를 생략하고 function(2)로 호출해도 동일하게 동작합니다. 
-
+result 변수는 invoke 메서드로 함수를 실행할 수 있습니다. (invoke 메서드는 operator overloading이 되어있기 떄문에 생략 가능합니다.)  
+실행 할 때 인자로 2를 넣어주면 2 * 10 * 20 = 400 이 반환됩니다.
 
 ```kotlin
 fun main() {
@@ -137,48 +138,51 @@ fun <T> Appendable.appendElement(element: T, transform: ((T) -> CharSequence)?) 
 ```
 
 ### 분석 
-가장 먼저 transform은 함수를 매개변수로 받습니다.
+ - 먼저 joinToString은 transform이라는 함수를 매개변수로 받습니다.
 ```kotlin
 // transform: (T) -> CharSequence
 ```
-위에서 작성했던 코드를 조금 더 상세하게 풀어보겠습니다.  
+
+ - 위에서 작성했던 JoinToStringCustom 코드를 조금 더 상세하게 풀어보겠습니다.  
 타입 T를 받아서 CharSequence로 변환하는 함수입니다.
 ```kotlin
 /** List의 Generic type 은 현재 Child 입니다.
- * 그러면 transform 함수 매개변수 타입은 Child 입니다. it == Child
- * 그리고 transform 함수는 Child를 받아서 CharSequence로 변환해야합니다.
- * 그리고 반환 타입은 CharSequence 타입이어야 하기 때문에 함수의 scope 닫힐 때 마지막줄은 CharSequence 타입이어야합니다.
- * 따라서 it.name 은 CharSequence 타입이기 때문에 컴파일 에러가 발생하지 않습니다.
+ *  transform 함수의 매개변수 타입은 Child 입니다. ( <T> == it == Child )
+ *  transform 함수는 Child를 받아서 CharSequence로 변환해야합니다.
+ *  따라서 반환 타입은 CharSequence 타입이어야하며 함수의 scope가 닫힐 때 마지막줄은 CharSequence여야 합니다.
+ *  따라서 it.name 은 CharSequence 타입이기 때문에 컴파일 에러가 발생하지 않습니다.
  */
 List<Child>.joinToStringCustom {
     it.name
 }
 ```
 
-따라서 함수 인자 안에 다른 함수를 넣어서 사용할 수 있습니다.
+ - 함수 인자 안에 다른 함수를 넣어서 사용할 수 있습니다.
 ```kotlin
 fun main() {
     val childrenNames = parents.children.joinToStringCustom { child ->
-        println(child)
+        println(child) // <-- 추가
         child.age.toString()
     }
 }
 ```
 
-그러면 함수의 인자가 두개가 될때 어떻게 될까요?  
-인자가 두개일 땐 함수 스코프 내부에 Parameter Labeling을 필수로 해줘야합니다.   
-아래 함수는 Iterable 타입의 T와 Int를 받아서 CharSequence로 변환하는 함수입니다.  
+ - 그러면 함수의 인자가 2개가 될때 어떻게 될까요?  
+인자가 2개일 땐 함수 스코프 내부에 Parameter Labeling을 필수로 해줘야합니다.  
+아래 함수는 Iterable 타입의 T와 Int를 받아서 CharSequence로 변환하는 함수입니다.
 ```kotlin
+// kotlin은 구조 분해 할당도 지원해 주기 떄문에 (index, element)로 구조 분해 할당을 하여 index와 element를 사용할 수 있습니다.
 fun <T> Iterable<T>.joinToStringCustomV2(
     transform: (T, Int) -> CharSequence,
 ): String {
-    return StringBuilder().let {
+    return StringBuilder().let { builder ->
         for ((index, element) in this.withIndex()) {
-            it.appendLine(
+            builder.appendLine(
                 transform(element, index)
             )
         }
-        it.trim().toString()
+        
+        builder.trim().toString()
     }
 }
 
