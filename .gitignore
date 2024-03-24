@@ -1,9 +1,11 @@
-### IntelliJ IDEA ###
-out/
-!**/src/main/**/out/
-!**/src/test/**/out/
+HELP.md
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
 
-### Eclipse ###
+### STS ###
 .apt_generated
 .classpath
 .factorypath
@@ -15,6 +17,15 @@ bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
 
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
@@ -25,31 +36,5 @@ bin/
 ### VS Code ###
 .vscode/
 
-### Mac OS ###
-.DS_Store
-/.idea/codeStyles/codeStyleConfig.xml
-/.idea/kotlinc.xml
-/.idea/libraries/KotlinJavaRuntime.xml
-/.idea/misc.xml
-/.idea/modules.xml
-/.idea/codeStyles/Project.xml
-/.idea/inspectionProfiles/Project_Default.xml
-/.idea/uiDesigner.xml
-/.idea/
-/.gradle/buildOutputCleanup/buildOutputCleanup.lock
-/.gradle/buildOutputCleanup/cache.properties
-/.gradle/8.2/checksums/checksums.lock
-/.gradle/8.2/dependencies-accessors/dependencies-accessors.lock
-/.gradle/8.2/executionHistory/executionHistory.bin
-/.gradle/8.2/executionHistory/executionHistory.lock
-/.gradle/file-system.probe
-/.gradle/8.2/fileHashes/fileHashes.bin
-/.gradle/8.2/fileHashes/fileHashes.lock
-/.gradle/8.2/dependencies-accessors/gc.properties
-/.gradle/8.2/gc.properties
-/.gradle/vcs-1/gc.properties
-/.gradle/8.2/fileChanges/last-build.bin
-/.gradle/8.2/checksums/md5-checksums.bin
-/.gradle/buildOutputCleanup/outputFiles.bin
-/.gradle/8.2/fileHashes/resourceHashesCache.bin
-/.gradle/8.2/checksums/sha1-checksums.bin
+### Kotlin ###
+.kotlin
