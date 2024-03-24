@@ -26,13 +26,15 @@ checked exception 을 사용하지 않는 것은 가독성을 좋게 해주는 �
 
 checked exception 을 사용하지 않으면 예외 처리를 강제하지 않기 때문에 개발자가 예외 처리를 하지 않을 수 있습니다.
 
-예를 들어 IOException 같은 경우 개발자가 예외 처리를 하지 않으면 메모리 누수가 발생하여 application이 종료 되는 critical한 문제가 생길 수 있습니다.
+예를 들어 IOException 같은 경우 개발자가 예외 처리를 하지 않으면 메모리 누수가 발생하여 application이 종료 되는 문제가 생길 수 있습니다.
 
 ### 예제
 
 #### java
 아래는 java 에서 checked exception 을 사용한 예제 입니다.
+
 java 는 checked exception 을 강제하며 try-with-resources 를 사용해 구현 했습니다.
+
 try 함수에 Closeable interface implement 객체를 넣으면 try block 이 끝나면서 자동으로 Closable.close() 함수를 호출하여 자원을 해제합니다.
 
 ```java
@@ -90,4 +92,4 @@ fun main() {
 ```
 
 ## 결론
-CheckedException은 ExceptionHandler를 구현하여 예외를 처리하는 것이 좋습니다.
+kotlin을 사용하는 개발자라면 checked exception에 대한 이슈를 알고 있어야 합니다.
