@@ -1,4 +1,4 @@
-package com.example.blog.norollbackfor
+package com.example.blog
 
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
