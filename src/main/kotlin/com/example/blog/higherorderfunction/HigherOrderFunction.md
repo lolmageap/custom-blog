@@ -1,7 +1,15 @@
 # 고차 함수
 
-고차 함수는 다른 함수를 인자로 받거나 함수를 반환하는 함수를 말합니다.  
-kotlin에서는 함수를 일급 객체로 다루기 때문에 함수를 인자로 받거나 반환할 수 있습니다.  
+## 들어가기에 앞서
+java 는 runnable, supplier, Comparator, Function, BinaryOperator 등등 다양한 functional interface를 제공합니다.  
+하지만 kotlin은 functional interface를 직접적으로는 제공하지 않습니다.  
+왜냐하면 kotlin은 함수를 일급 객체로 다루기 때문에 functional interface를 직접적으로 제공하지 않아도 됩니다.  
+물론 kotlin에서도 함수형 인터페이스를 사용할 수 있으며 kotlin의 코드를 decompile 하면 내부적으로는 java의 functional interface를 사용합니다.
+
+## 고차함수란?
+
+고차 함수는 다른 함수를 인자로 받거나 함수를 반환하는 함수를 말합니다.
+위에서 말했듯이 kotlin에서는 함수를 일급 객체로 다루기 때문에 함수를 인자로 받거나 반환할 수 있습니다.  
 아래 calculate 함수는 두 개의 정수를 받아서 함수를 실행하는 함수입니다.
 
 ```kotlin
@@ -206,5 +214,49 @@ fun main() {
             2: child2
             3: child3
         """.trimIndent())
+}
+```
+
+## extension method 활용
+
+확장 함수를 사용하면 기존 클래스에 새로운 함수를 추가할 수 있습니다.  
+이를 위에서 사용했던 고차함수에 적용을 하면 아래처럼 코드를 작성할 수 있습니다.
+
+```kotlin
+inline fun <T> Collection<T>.ifNotEmpty(
+    transform: T.() -> Unit,
+) {
+    if (this.isNotEmpty()) {
+        this.forEach {
+            it.transform()
+        }
+    }
+}
+```
+
+확장 함수를 인자로 넘길 때와 일반 함수를 인자로 넘길 때의 차이점은 무엇일까요?
+아래는 일반 함수를 인자로 넘기는 코드입니다.
+
+```kotlin
+inline fun <T> Collection<T>.ifDistinct(
+    transform: (T) -> Unit,
+) {
+    if (this.distinct().size == this.size) {
+        this.forEach {
+            transform(it)
+        }
+    }
+}
+```
+
+사용할 떄를 비교 해보면 확장 함수를 인자로 넘기게 되면 함수 스코프 내부에서 this keyword를 사용할 수 있습니다.
+반면 확장 함수가 아닌 일반 함수를 인자로 넘기게 되면 함수 스코프 내부에서 it keyword를 사용해야합니다.
+
+```kotlin
+fun main() {
+    val list = listOf(1, 2, 3, 4, 5)
+
+    list.ifNotEmpty { println(this) }
+    list.ifDistinct { println(it) }
 }
 ```
